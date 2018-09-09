@@ -12,8 +12,15 @@ classify x
     s = aliquotSum x
 
 aliquotSum :: Integral a => a -> a
-aliquotSum = sum . factors
-
-factors :: Integral a => a -> [a]
-factors x = filter isDivisibleBy [1..(x-1)]
-  where isDivisibleBy y = x `rem` y == 0
+aliquotSum n = sum $ map sumOfSmallAndLargeFactor smallFactors
+  where
+    smallFactors = filter isDivisibleBy [1..q]
+    q = floor (sqrt (fromIntegral n))
+    isDivisibleBy y = n `rem` y == 0
+    sumOfSmallAndLargeFactor x
+      | x == 1 && y == 1 = 0
+      | x == 1           = 1
+      | x == y           = x
+      | otherwise        = x + y
+      where
+        y = n `div` x
